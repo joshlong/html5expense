@@ -39,6 +39,13 @@ import java.math.BigDecimal;
 import java.util.*;
 
 
+/**
+ *
+ * Tests the JPA implementation of the {@link ExpenseReport} interface. Uses the Spring 3.1
+ * {@link org.springframework.test.context.TestContext} framework to build tests that are transactional
+ *
+ * @author Josh Long
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = ComponentConfig.class)
 @ActiveProfiles("local")
