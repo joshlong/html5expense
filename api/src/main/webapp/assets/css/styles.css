@@ -218,28 +218,28 @@ a:link {
     width: 16px;
     height: 20px;
     display: inline-block;
-    background: url(/assets/images/trash_sprite.gif) no-repeat 0 0;
+    background: url(../images/trash_sprite.gif) no-repeat 0 0;
 }
 
 .trashIconOff {
-    background: url(/assets/images/trash_sprite.gif) no-repeat 0 0;
+    background: url(../images/trash_sprite.gif) no-repeat 0 0;
 }
 
 .trashIconOn {
-    background: url(/assets/images/trash_sprite.gif) no-repeat -16px 0;
+    background: url(../images/trash_sprite.gif) no-repeat -16px 0;
 }
 
 .hasReceiptIcon {
     width: 25px;
     height: 20px;
     display: inline-block;
-    background: url(/assets/images/attachments/receipts.gif) no-repeat 0 0;
+    background: url(../images/attachments/receipts.gif) no-repeat 0 0;
 }
 
 .hasReceiptFalse {
-    background: url(/assets/images/attachments/receipts-required.gif) no-repeat 0 0;
+    background: url(../images/attachments/receipts-required.gif) no-repeat 0 0;
 }
 
 .hasReceiptTrue {
-    background: url(/assets/images/attachments/receipts-provided.gif) no-repeat 0 0;
+    background: url(../images/attachments/receipts-provided.gif) no-repeat 0 0;
 }

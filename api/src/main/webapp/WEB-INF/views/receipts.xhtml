@@ -16,6 +16,7 @@
 
     <link th:href="@{/assets/css/styles.css}" rel="stylesheet" type="text/css"/>
 
+
 </head>
 <body>
 <div id="ws">
@@ -128,7 +129,7 @@ function loadExpenseReportExpensesLocally(expenseReportId, purpose, results, cb)
 function loadExpenseReportExpenses(expenseReportId) {
     var purpose = null;
     var results = [];
-    var urlForReport = '/reports/' + expenseReportId;
+    var urlForReport = expenseReportUrl.replace('expenseReportId',''+expenseReportId); // '/reports/' + expenseReportId;
     var urlForExpenses = expenseReportExpensesUrl.replace('reportId', '' + expenseReportId);
     $.get(urlForReport, function(result) {
         purpose = (result.purpose);
