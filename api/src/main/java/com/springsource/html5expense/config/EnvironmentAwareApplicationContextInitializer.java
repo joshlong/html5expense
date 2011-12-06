@@ -35,6 +35,5 @@ public class EnvironmentAwareApplicationContextInitializer
             if(log.isInfoEnabled()) log.info( "setting active profile to 'local'.");
             applicationContext.getEnvironment().setActiveProfiles("local");
         }
-        applicationContext.refresh();
     }
 }

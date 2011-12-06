@@ -31,6 +31,7 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.inject.Inject;
+import javax.sql.DataSource;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -42,19 +43,21 @@ import java.util.List;
  *
  * @author Josh Long
  */
+//@ImportResource("/ec-loader.xml")
+
+@Import({ComponentConfig.class, LocalServicesConfig.class, CloudServicesConfig.class})
 @Configuration
-@Import({ComponentConfig.class ,CloudServicesConfig.class, LocalServicesConfig.class})
-@ImportResource("/ec-loader.xml")
 public class BatchConfig {
 
-    @Inject private ServicesConfig servicesConfig ;
-    @Inject private ComponentConfig componentConfig;
+
+    @Autowired
+    DataSource dataSource;
 
     @Autowired
     @Qualifier("newEligibleCharges")
-    private MessageChannel channel;
+    MessageChannel channel;
 
-    private File batchFileDirectory;
+    File batchFileDirectory;
 
     @Autowired
     public void setBatchFileDirectory(@Value("#{ systemProperties['user.home'] }") String userHome) throws Exception {
@@ -106,8 +109,8 @@ public class BatchConfig {
     @Bean
     public JobRepositoryFactoryBean jobRepository() throws Exception {
         JobRepositoryFactoryBean bean = new JobRepositoryFactoryBean();
-        bean.setTransactionManager(new DataSourceTransactionManager(servicesConfig .dataSource()));
-        bean.setDataSource(servicesConfig .dataSource());
+        bean.setTransactionManager(new DataSourceTransactionManager(dataSource));
+        bean.setDataSource(dataSource);
         return bean;
     }
 
