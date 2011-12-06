@@ -55,6 +55,7 @@ public class TestJpaExpenseReportingService {
     private PlatformTransactionManager transactionManager;
 
     private EligibleCharge expensiveCharge;
+
     private List<EligibleCharge> charges;
 
 
@@ -66,13 +67,11 @@ public class TestJpaExpenseReportingService {
 
         // clean out the data
         TransactionTemplate transactionTemplate = new TransactionTemplate(this.transactionManager);
-        transactionTemplate.execute(new TransactionCallback<Object>() {
-            public Object doInTransaction(TransactionStatus status) {
-
-                entityManager.createQuery("DELETE FROM " + Expense.class.getName()).executeUpdate();
-                entityManager.createQuery("DELETE FROM " + ExpenseReport.class.getName()).executeUpdate();
-                entityManager.createQuery("DELETE FROM " + EligibleCharge.class.getName()).executeUpdate();
-                return null;
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                for (Class<?> c : new Class<?>[]{Expense.class, ExpenseReport.class, EligibleCharge.class})
+                    entityManager.createQuery(String.format("DELETE FROM %s", c.getName())).executeUpdate();
             }
         });
 
@@ -115,19 +114,6 @@ public class TestJpaExpenseReportingService {
         Assert.assertNotNull(expenseCollection);
         Assert.assertTrue(expenseCollection.size() == 2);
     }
-/*
-
-    @Test public void testAttachingReceipts() throws Throwable {
-    Long expenseReportId = expenseReportingService.createReport(itsMission);
-    Collection<Expense> expenses = expenseReportingService.createExpenses(expenseReportId, Arrays.asList(expensiveCharge.getId()));
-    Integer expenseId = expenses.iterator().next().getId();
-    String receiptClaim = expenseReportingService.attachReceipt(expenseReportId, expenseId, new byte[0]);
-    Assert.assertNotNull(receiptClaim);
-    Expense entity = entityManager.find(Expense.class, expenseId);
-    Assert.assertFalse(entity.isFlagged());
-    Assert.assertEquals(receiptClaim, entity.getReceipt());
-    }
-*/
 
     @Test
     @Transactional
@@ -137,27 +123,4 @@ public class TestJpaExpenseReportingService {
         ExpenseReport er = entityManager.find(ExpenseReport.class, expenseReportId);
         Assert.assertEquals(er.getState(), State.IN_REVIEW);
     }
-
 }
-/**
-
- @RunWith(SpringJUnit4ClassRunner.class)
- @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = ComponentConfig.class)
- public class TestJpaExpenseReportingService {
-
- private EligibleCharge expensiveCharge;
-
- @Inject private ExpenseReportingService expenseReportingService;
-
- @Inject private PlatformTransactionManager transactionManager;
-
- @PersistenceContext private EntityManager entityManager;
-
- @Inject private DataSource dataSource;
-
- private String itsMission = "\"to go... where no man... has gone before!\"";
-
- private List<EligibleCharge> charges;
-
- }
- */
