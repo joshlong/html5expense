@@ -22,11 +22,9 @@ import org.hibernate.dialect.H2Dialect;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -51,23 +49,17 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackageClasses = JpaExpenseReportingService.class)
+@Import({CloudServicesConfig.class, LocalServicesConfig.class})
 public class ComponentConfig {
 
 
-    @Bean
-    public DataSource dataSource() throws Exception {
-        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-        dataSource.setUrl("jdbc:h2:tcp://localhost/~/expenses");
-        dataSource.setDriverClass(Driver.class);
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
-    }
+    @Autowired
+    private ServicesConfig servicesConfig;
 
     @Bean
     public PlatformTransactionManager transactionManager() throws Exception {
-        EntityManagerFactory emf  = entityManagerFactory().getObject() ;
-        return new JpaTransactionManager( emf );
+        EntityManagerFactory emf = entityManagerFactory().getObject();
+        return new JpaTransactionManager(emf);
     }
 
     @Bean
@@ -77,12 +69,12 @@ public class ComponentConfig {
         jpaVendorAdapter.setShowSql(true);
 
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put("hibernate.dialect", H2Dialect.class.getName());
+        properties.put("hibernate.dialect", servicesConfig.dialect().getName());
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(jpaVendorAdapter);
         factory.setJpaPropertyMap(properties);
-        factory.setDataSource(dataSource());
+        factory.setDataSource(this.servicesConfig.dataSource());
         factory.setPackagesToScan(new String[]{Expense.class.getPackage().getName()});
 
         return factory;

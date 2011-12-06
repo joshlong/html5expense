@@ -1,8 +1,11 @@
-package com.springsource.html5expense.config;
+package com.springsource.html5expense.config.batch;
 
+import com.springsource.html5expense.config.CloudServicesConfig;
+import com.springsource.html5expense.config.ComponentConfig;
+import com.springsource.html5expense.config.LocalServicesConfig;
+import com.springsource.html5expense.config.ServicesConfig;
 import com.springsource.html5expense.integrations.EligibleChargeProcessor;
 import com.springsource.html5expense.integrations.EligibleChargeProcessorHeaders;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -22,7 +25,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.support.MessageBuilder;
@@ -35,15 +37,18 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * This Spring Batch job lets you batch load information into the database based on
+ * a CSV file (in this configuration, the file's supposed to be loaded from {$HOME/in}).
+ *
  * @author Josh Long
  */
 @Configuration
-@Import(ComponentConfig.class)
+@Import({ComponentConfig.class ,CloudServicesConfig.class, LocalServicesConfig.class})
 @ImportResource("/ec-loader.xml")
 public class BatchConfig {
 
-    @Inject
-    private ComponentConfig componentConfig;
+    @Inject private ServicesConfig servicesConfig ;
+    @Inject private ComponentConfig componentConfig;
 
     @Autowired
     @Qualifier("newEligibleCharges")
@@ -99,10 +104,10 @@ public class BatchConfig {
     }
 
     @Bean
-    public JobRepositoryFactoryBean jobRepository(  ) throws Exception {
+    public JobRepositoryFactoryBean jobRepository() throws Exception {
         JobRepositoryFactoryBean bean = new JobRepositoryFactoryBean();
-        bean.setTransactionManager(new DataSourceTransactionManager(componentConfig.dataSource()));
-        bean.setDataSource(componentConfig.dataSource());
+        bean.setTransactionManager(new DataSourceTransactionManager(servicesConfig .dataSource()));
+        bean.setDataSource(servicesConfig .dataSource());
         return bean;
     }
 
@@ -134,20 +139,4 @@ public class BatchConfig {
         }
     }
 
-
-    public static void main(String args[]) throws Exception {
-
-        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(BatchConfig.class);
-
-        Job job = annotationConfigApplicationContext.getBean("read-eligible-charges", Job.class);
-
-        JobParametersBuilder builder = new JobParametersBuilder();
-        builder.addString("file", "foo");
-        builder.addLong("uid", System.currentTimeMillis());
-        JobParameters jobParameters = builder.toJobParameters();
-
-        JobLauncher jobLauncher = annotationConfigApplicationContext.getBean(JobLauncher.class);
-        jobLauncher.run(job, jobParameters);
-
-    }
 }

@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.springsource.html5expense.config;
+package com.springsource.html5expense.config.web;
 
+import com.springsource.html5expense.config.ComponentConfig;
 import com.springsource.html5expense.controllers.ExpenseReportingApiController;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -46,22 +47,16 @@ import java.util.Locale;
 @Import(ComponentConfig.class)
 @PropertySource("/config.properties")
 @EnableWebMvc
-public class WebConfig extends WebMvcConfigurerAdapter
- {
-     @Override
-     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+public class WebConfig extends WebMvcConfigurerAdapter {
 
-     }
-
-     @Value("${debug}")
-    private boolean debug;
+    @Value("${debug}") private boolean debug;
 
     private int maxUploadSizeInMb = 20 * 1024 * 1024;
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver commonsMultipartResolver() {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        commonsMultipartResolver.setMaxUploadSize( maxUploadSizeInMb  );
+        commonsMultipartResolver.setMaxUploadSize(maxUploadSizeInMb);
         return commonsMultipartResolver;
     }
 
@@ -71,9 +66,17 @@ public class WebConfig extends WebMvcConfigurerAdapter
     }
 
     @Override
-    public void configureViewControllers(ViewControllerConfigurer configurer) {
-        configurer.mapViewName("/", "receipts");
+    public void addViewControllers(ViewControllerRegistry registry) {
+      registry.addViewController("/").setViewName("receipts");
     }
+
+    /*
+
+        @Override
+        public void configureViewControllers(ViewControllerConfigurer configurer) {
+            configurer.mapViewName("/", "receipts");
+        }
+    */
 
     @Bean
     public ThymeleafViewResolver viewResolver() {
@@ -104,7 +107,6 @@ public class WebConfig extends WebMvcConfigurerAdapter
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine springTemplateEngine = new SpringTemplateEngine();
         springTemplateEngine.setTemplateResolver(this.servletContextTemplateResolver());
-
         return springTemplateEngine;
     }
 
@@ -112,11 +114,5 @@ public class WebConfig extends WebMvcConfigurerAdapter
     public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
-
-    @Override
-    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
-
-    }
-
 
 }
