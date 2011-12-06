@@ -1,5 +1,7 @@
 package com.springsource.html5expense.config;
 
+import javax.sql.DataSource;
+
 import org.h2.Driver;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.H2Dialect;
@@ -7,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-
-import javax.sql.DataSource;
 
 @Configuration
 @Profile("local")

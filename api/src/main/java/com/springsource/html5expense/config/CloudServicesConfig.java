@@ -1,5 +1,9 @@
 package com.springsource.html5expense.config;
 
+import java.util.Collection;
+
+import javax.sql.DataSource;
+
 import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.RdbmsServiceInfo;
 import org.cloudfoundry.runtime.service.relational.RdbmsServiceCreator;
@@ -9,9 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.util.Assert;
-
-import javax.sql.DataSource;
-import java.util.Collection;
 
 /**
  * @author Josh Long

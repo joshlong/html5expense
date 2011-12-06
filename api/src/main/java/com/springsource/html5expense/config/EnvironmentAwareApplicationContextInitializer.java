@@ -18,8 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  *
  * @author Josh Long
  */
-public class EnvironmentAwareApplicationContextInitializer
-        implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+public class EnvironmentAwareApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     private Log log = LogFactory.getLog(getClass());
     private CloudEnvironment cloudEnvironment = new CloudEnvironment();

@@ -4,7 +4,7 @@ import javax.sql.DataSource;
 
 /**
  *
- * Provides definitons for the Hibernate {@link org.hibernate.dialect.Dialect} and the SQL RDBMS {@link DataSource}.
+ * Provides definitions for the Hibernate {@link org.hibernate.dialect.Dialect} and the SQL RDBMS {@link DataSource}.
  *
  * @author Josh Long
  */
