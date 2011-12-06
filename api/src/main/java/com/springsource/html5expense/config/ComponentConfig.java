@@ -65,11 +65,12 @@ public class ComponentConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws Exception {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-        jpaVendorAdapter.setGenerateDdl(true);
+        jpaVendorAdapter.setGenerateDdl(false);
         jpaVendorAdapter.setShowSql(true);
 
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("hibernate.dialect", servicesConfig.dialect().getName());
+        properties.put("hibernate.hbm2ddl.auto", "update");
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(jpaVendorAdapter);
