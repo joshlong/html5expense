@@ -70,14 +70,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
       registry.addViewController("/").setViewName("receipts");
     }
 
-    /*
-
-        @Override
-        public void configureViewControllers(ViewControllerConfigurer configurer) {
-            configurer.mapViewName("/", "receipts");
-        }
-    */
-
     @Bean
     public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver thymeleafViewResolver = new ThymeleafViewResolver();

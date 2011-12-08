@@ -9,15 +9,7 @@ import javax.sql.DataSource;
  * @author Josh Long
  */
 public interface ServicesConfig {
-
-    /**
-     * which dialect does the {@link DataSource} required?
-     *
-     * @return a Hibernate dialect to be used in configuring the {@link org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean}
-     */
-    Class<? extends org.hibernate.dialect.Dialect> dialect();
-
-
+	
     /**
      * a SQL RDBMS data source
      *

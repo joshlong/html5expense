@@ -2,6 +2,7 @@ package com.springsource.html5expense;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -14,45 +15,46 @@ import java.util.Date;
 @Table(name = "ELIGIBLE_CHARGE")
 public class EligibleCharge {
 
-    @GeneratedValue
-    @Id
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Id
+	private Long id;
 
-    public Long getId() {
-        return this.id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    private String merchant, category;
-    private Date date;
-    private BigDecimal amount;
+	private String merchant, category;
+	private Date date;
+	private BigDecimal amount;
 
-    public EligibleCharge() {
-    }
+	public EligibleCharge() {
+	}
 
-    public EligibleCharge(Date date, String merchant, String category, BigDecimal bigDecimal) {
-        this.merchant = merchant;
-        this.category = category;
-        this.date = date;
-        this.amount = bigDecimal;
-    }
+	public EligibleCharge(Date date, String merchant, String category,
+			BigDecimal bigDecimal) {
+		this.merchant = merchant;
+		this.category = category;
+		this.date = date;
+		this.amount = bigDecimal;
+	}
 
-    public Date getDate() {
-        return date;
-    }
+	public Date getDate() {
+		return date;
+	}
 
-    public String getMerchant() {
-        return merchant;
-    }
+	public String getMerchant() {
+		return merchant;
+	}
 
-    public String getCategory() {
-        return category;
-    }
+	public String getCategory() {
+		return category;
+	}
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
+	public BigDecimal getAmount() {
+		return amount;
+	}
 
-    public Long getI() {
-        return this.id;
-    }
+	public Long getI() {
+		return this.id;
+	}
 }

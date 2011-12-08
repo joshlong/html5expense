@@ -25,7 +25,7 @@ import java.util.*;
 @Table(name = "EXPENSE_REPORT")
 public class ExpenseReport {
 
-    @GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
     @Id
     private Long id;
 

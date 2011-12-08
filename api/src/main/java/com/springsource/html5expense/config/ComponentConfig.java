@@ -15,23 +15,36 @@
  */
 package com.springsource.html5expense.config;
 
+import java.io.File;
+import java.sql.Driver;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.commons.lang.SystemUtils;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.MySQL5InnoDBDialect;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.springsource.html5expense.EligibleCharge;
 import com.springsource.html5expense.Expense;
+import com.springsource.html5expense.ExpenseReport;
 import com.springsource.html5expense.services.JpaExpenseReportingService;
 
 /**
@@ -49,6 +62,8 @@ import com.springsource.html5expense.services.JpaExpenseReportingService;
 @Import({ CloudServicesConfig.class, LocalServicesConfig.class })
 public class ComponentConfig {
 
+	static private Class<?>[] entityClasses = { Expense.class, ExpenseReport.class, EligibleCharge.class };
+
 	@Autowired
 	private ServicesConfig servicesConfig;
 
@@ -59,23 +74,27 @@ public class ComponentConfig {
 	}
 
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
-			throws Exception {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws Exception {
+
 		HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-		jpaVendorAdapter.setGenerateDdl(false);
+		jpaVendorAdapter.setGenerateDdl(true);
 		jpaVendorAdapter.setShowSql(true);
 
 		Map<String, String> properties = new HashMap<String, String>();
-		properties.put("hibernate.dialect", servicesConfig.dialect().getName());
-		properties.put("hibernate.hbm2ddl.auto", "update");
-
+		properties.put("hibernate.dialect", MySQL5InnoDBDialect.class.getName());		
+		
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setJpaVendorAdapter(jpaVendorAdapter);
 		factory.setJpaPropertyMap(properties);
 		factory.setDataSource(this.servicesConfig.dataSource());
-		factory.setPackagesToScan(new String[] { Expense.class.getPackage().getName() });
-
+		factory.setPackagesToScan(packagesFromEntityClasses(entityClasses));
 		return factory;
 	}
 
+	private String[] packagesFromEntityClasses(Class<?>[] classes) {
+		Set<String> pkgs = new HashSet<String>();
+		for (Class<?> c : classes)
+			pkgs.add(c.getPackage().getName());
+		return new ArrayList<String>(pkgs).toArray(new String[pkgs.size()]);
+	}
 }

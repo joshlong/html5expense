@@ -17,6 +17,7 @@ package com.springsource.html5expense;
 
 
 import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -24,7 +25,7 @@ import java.util.Date;
 @Table(name = "EXPENSE")
 public class Expense {
 
-    @GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
     @Id
     private Integer id;
 
